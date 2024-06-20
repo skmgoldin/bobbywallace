@@ -16,19 +16,49 @@
         h2, p {
             text-align: left;
         }
+        .video-wrapper {
+            max-width: 560px; /* Cap the maximum width */
+            max-height: 315px; /* Cap the maximum height */
+            overflow: hidden;
+            position: relative;
+            margin-left: 0; /* Anchor the video container to the left */
+        }
+        .video-container {
+            position: relative;
+            padding-top: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            width: 100%;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
     <h1>Col. Bobby Wallace History</h1>
     <h2>Father & Grandfather</h2>
-    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/8SIU1hRH1qg?si=9vO-iHzUVUVD-9oR" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <div class="video-container">
+        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/8SIU1hRH1qg?si=9vO-iHzUVUVD-9oR" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
     <h2>Journey to Germany</h2>
-    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/X3hI0OkaU2U?si=R9ZbKJGlg7lv7Z9J" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <div class="video-container">
+        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/X3hI0OkaU2U?si=R9ZbKJGlg7lv7Z9J" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
     <h2>Meeting Karin</h2>
-    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/DiqMpF5ZAWs?si=3Y5AGgi9GkFN7sh6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <div class="video-container">
+        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/DiqMpF5ZAWs?si=3Y5AGgi9GkFN7sh6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
     <h2>Battle of Ia Drang</h2>
-    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/vbIz0WB4J3M?si=vtgum7u64ivwRoN_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <div class="video-container">
+        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/vbIz0WB4J3M?si=vtgum7u64ivwRoN_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
     <h2>Purple Heart</h2>
-    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/JL2X65Omjhg?si=SjvbX1dmdbY7Hwoj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <div class="video-container">
+        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/JL2X65Omjhg?si=SjvbX1dmdbY7Hwoj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
 </body>
 </html>
