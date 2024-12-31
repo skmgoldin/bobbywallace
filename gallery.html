@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gallery</title>
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .gallery-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    a {
+      color: white;
+    }
+    a:hover {
+      opacity: 0.8;
+    }
+
+    /* Card container with fixed size to prevent layout jump */
+    .flip-card {
+      position: relative;
+      width: 200px;   /* Adjust as you see fit */
+      height: 300px;  /* Adjust as you see fit */
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .flip-card img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      left: 0;
+      top: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .flip-card .back {
+      opacity: 0; /* hidden by default */
+    }
+    .flip-card:hover .front {
+      opacity: 0;
+    }
+    .flip-card:hover .back {
+      opacity: 1;
+    }
+    /* For singles with no back */
+    .flip-card.no-back:hover .front {
+      opacity: 1 !important;
+    }
+
+    /* Modal overlay */
+    .modal {
+      position: fixed;
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none; /* hidden by default */
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .modal.active {
+      display: flex;
+    }
+    /* Modal content area */
+    .modal-content {
+      position: relative;
+      background: #222;
+      padding: 20px;
+      max-width: 90%;
+      max-height: 90%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Large image in modal */
+    .modal-content img {
+      max-width: 100%;
+      max-height: 80vh; /* so it doesn't overflow the screen */
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+    /* Close button (X) */
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    /* Toggle front/back button */
+    .toggle-btn {
+      background: #444;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .toggle-btn:hover {
+      background: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>Document Gallery</h1>
+  <p style="text-align:center;">
+    <a href="index.html">Return to Main</a>
+  </p>
+
+  <div class="gallery-container">
+    <!--
+      Pairs have: data-front="assets/??-A.jpg" data-back="assets/??-B.jpg"
+      Singles have: class="flip-card no-back" + data-front="assets/single.jpg"
+      Also add .front & .back images for the small "flip" effect on hover
+    -->
+
+    <!-- A-A / A-B -->
+    <div class="flip-card" data-front="assets/A-A.jpg" data-back="assets/A-B.jpg">
+      <img src="assets/A-A.jpg" alt="A-A" class="front">
+      <img src="assets/A-B.jpg" alt="A-B" class="back">
+    </div>
+
+    <!-- AA-A / AA-B -->
+    <div class="flip-card" data-front="assets/AA-A.jpg" data-back="assets/AA-B.jpg">
+      <img src="assets/AA-A.jpg" alt="AA-A" class="front">
+      <img src="assets/AA-B.jpg" alt="AA-B" class="back">
+    </div>
+
+    <!-- B-A / B-B -->
+    <div class="flip-card" data-front="assets/B-A.jpg" data-back="assets/B-B.jpg">
+      <img src="assets/B-A.jpg" alt="B-A" class="front">
+      <img src="assets/B-B.jpg" alt="B-B" class="back">
+    </div>
+
+    <!-- BB-A / BB-B -->
+    <div class="flip-card" data-front="assets/BB-A.jpg" data-back="assets/BB-B.jpg">
+      <img src="assets/BB-A.jpg" alt="BB-A" class="front">
+      <img src="assets/BB-B.jpg" alt="BB-B" class="back">
+    </div>
+
+    <!-- C-A / C-B -->
+    <div class="flip-card" data-front="assets/C-A.jpg" data-back="assets/C-B.jpg">
+      <img src="assets/C-A.jpg" alt="C-A" class="front">
+      <img src="assets/C-B.jpg" alt="C-B" class="back">
+    </div>
+
+    <!-- CC-A / CC-B -->
+    <div class="flip-card" data-front="assets/CC-A.jpg" data-back="assets/CC-B.jpg">
+      <img src="assets/CC-A.jpg" alt="CC-A" class="front">
+      <img src="assets/CC-B.jpg" alt="CC-B" class="back">
+    </div>
+
+    <!-- D-A / D-B, plus single D-C -->
+    <div class="flip-card" data-front="assets/D-A.jpg" data-back="assets/D-B.jpg">
+      <img src="assets/D-A.jpg" alt="D-A" class="front">
+      <img src="assets/D-B.jpg" alt="D-B" class="back">
+    </div>
+    <div class="flip-card no-back" data-front="assets/D-C.jpg">
+      <img src="assets/D-C.jpg" alt="D-C" class="front">
+    </div>
+
+    <!-- DD-A / DD-B -->
+    <div class="flip-card" data-front="assets/DD-A.jpg" data-back="assets/DD-B.jpg">
+      <img src="assets/DD-A.jpg" alt="DD-A" class="front">
+      <img src="assets/DD-B.jpg" alt="DD-B" class="back">
+    </div>
+
+    <!-- E-A / E-B -->
+    <div class="flip-card" data-front="assets/E-A.jpg" data-back="assets/E-B.jpg">
+      <img src="assets/E-A.jpg" alt="E-A" class="front">
+      <img src="assets/E-B.jpg" alt="E-B" class="back">
+    </div>
+
+    <!-- EE-A / EE-B -->
+    <div class="flip-card" data-front="assets/EE-A.jpg" data-back="assets/EE-B.jpg">
+      <img src="assets/EE-A.jpg" alt="EE-A" class="front">
+      <img src="assets/EE-B.jpg" alt="EE-B" class="back">
+    </div>
+
+    <!-- F-A / F-B -->
+    <div class="flip-card" data-front="assets/F-A.jpg" data-back="assets/F-B.jpg">
+      <img src="assets/F-A.jpg" alt="F-A" class="front">
+      <img src="assets/F-B.jpg" alt="F-B" class="back">
+    </div>
+
+    <!-- FF-A / FF-B -->
+    <div class="flip-card" data-front="assets/FF-A.jpg" data-back="assets/FF-B.jpg">
+      <img src="assets/FF-A.jpg" alt="FF-A" class="front">
+      <img src="assets/FF-B.jpg" alt="FF-B" class="back">
+    </div>
+
+    <!-- G-A / G-B -->
+    <div class="flip-card" data-front="assets/G-A.jpg" data-back="assets/G-B.jpg">
+      <img src="assets/G-A.jpg" alt="G-A" class="front">
+      <img src="assets/G-B.jpg" alt="G-B" class="back">
+    </div>
+
+    <!-- GG-A / GG-B -->
+    <div class="flip-card" data-front="assets/GG-A.jpg" data-back="assets/GG-B.jpg">
+      <img src="assets/GG-A.jpg" alt="GG-A" class="front">
+      <img src="assets/GG-B.jpg" alt="GG-B" class="back">
+    </div>
+
+    <!-- H-A / H-B -->
+    <div class="flip-card" data-front="assets/H-A.jpg" data-back="assets/H-B.jpg">
+      <img src="assets/H-A.jpg" alt="H-A" class="front">
+      <img src="assets/H-B.jpg" alt="H-B" class="back">
+    </div>
+
+    <!-- HH-A / HH-B -->
+    <div class="flip-card" data-front="assets/HH-A.jpg" data-back="assets/HH-B.jpg">
+      <img src="assets/HH-A.jpg" alt="HH-A" class="front">
+      <img src="assets/HH-B.jpg" alt="HH-B" class="back">
+    </div>
+
+    <!-- I-A / I-B -->
+    <div class="flip-card" data-front="assets/I-A.jpg" data-back="assets/I-B.jpg">
+      <img src="assets/I-A.jpg" alt="I-A" class="front">
+      <img src="assets/I-B.jpg" alt="I-B" class="back">
+    </div>
+
+    <!-- II-A / II-B -->
+    <div class="flip-card" data-front="assets/II-A.jpg" data-back="assets/II-B.jpg">
+      <img src="assets/II-A.jpg" alt="II-A" class="front">
+      <img src="assets/II-B.jpg" alt="II-B" class="back">
+    </div>
+
+    <!-- J-A / J-B -->
+    <div class="flip-card" data-front="assets/J-A.jpg" data-back="assets/J-B.jpg">
+      <img src="assets/J-A.jpg" alt="J-A" class="front">
+      <img src="assets/J-B.jpg" alt="J-B" class="back">
+    </div>
+
+    <!-- K-A / K-B -->
+    <div class="flip-card" data-front="assets/K-A.jpg" data-back="assets/K-B.jpg">
+      <img src="assets/K-A.jpg" alt="K-A" class="front">
+      <img src="assets/K-B.jpg" alt="K-B" class="back">
+    </div>
+
+    <!-- KK-A / KK-B -->
+    <div class="flip-card" data-front="assets/KK-A.jpg" data-back="assets/KK-B.jpg">
+      <img src="assets/KK-A.jpg" alt="KK-A" class="front">
+      <img src="assets/KK-B.jpg" alt="KK-B" class="back">
+    </div>
+
+    <!-- L-A / L-B -->
+    <div class="flip-card" data-front="assets/L-A.jpg" data-back="assets/L-B.jpg">
+      <img src="assets/L-A.jpg" alt="L-A" class="front">
+      <img src="assets/L-B.jpg" alt="L-B" class="back">
+    </div>
+
+    <!-- LL-A / LL-B -->
+    <div class="flip-card" data-front="assets/LL-A.jpg" data-back="assets/LL-B.jpg">
+      <img src="assets/LL-A.jpg" alt="LL-A" class="front">
+      <img src="assets/LL-B.jpg" alt="LL-B" class="back">
+    </div>
+
+    <!-- M-A / M-B -->
+    <div class="flip-card" data-front="assets/M-A.jpg" data-back="assets/M-B.jpg">
+      <img src="assets/M-A.jpg" alt="M-A" class="front">
+      <img src="assets/M-B.jpg" alt="M-B" class="back">
+    </div>
+
+    <!-- MM-A / MM-B -->
+    <div class="flip-card" data-front="assets/MM-A.jpg" data-back="assets/MM-B.jpg">
+      <img src="assets/MM-A.jpg" alt="MM-A" class="front">
+      <img src="assets/MM-B.jpg" alt="MM-B" class="back">
+    </div>
+
+    <!-- N-A / N-B -->
+    <div class="flip-card" data-front="assets/N-A.jpg" data-back="assets/N-B.jpg">
+      <img src="assets/N-A.jpg" alt="N-A" class="front">
+      <img src="assets/N-B.jpg" alt="N-B" class="back">
+    </div>
+
+    <!-- NN-A / NN-B -->
+    <div class="flip-card" data-front="assets/NN-A.jpg" data-back="assets/NN-B.jpg">
+      <img src="assets/NN-A.jpg" alt="NN-A" class="front">
+      <img src="assets/NN-B.jpg" alt="NN-B" class="back">
+    </div>
+
+    <!-- O-A / O-B -->
+    <div class="flip-card" data-front="assets/O-A.jpg" data-back="assets/O-B.jpg">
+      <img src="assets/O-A.jpg" alt="O-A" class="front">
+      <img src="assets/O-B.jpg" alt="O-B" class="back">
+    </div>
+
+    <!-- OO-A / OO-B -->
+    <div class="flip-card" data-front="assets/OO-A.jpg" data-back="assets/OO-B.jpg">
+      <img src="assets/OO-A.jpg" alt="OO-A" class="front">
+      <img src="assets/OO-B.jpg" alt="OO-B" class="back">
+    </div>
+
+    <!-- P-A / P-B -->
+    <div class="flip-card" data-front="assets/P-A.jpg" data-back="assets/P-B.jpg">
+      <img src="assets/P-A.jpg" alt="P-A" class="front">
+      <img src="assets/P-B.jpg" alt="P-B" class="back">
+    </div>
+
+    <!-- PP-A / PP-B -->
+    <div class="flip-card" data-front="assets/PP-A.jpg" data-back="assets/PP-B.jpg">
+      <img src="assets/PP-A.jpg" alt="PP-A" class="front">
+      <img src="assets/PP-B.jpg" alt="PP-B" class="back">
+    </div>
+
+    <!-- Q-A / Q-B -->
+    <div class="flip-card" data-front="assets/Q-A.jpg" data-back="assets/Q-B.jpg">
+      <img src="assets/Q-A.jpg" alt="Q-A" class="front">
+      <img src="assets/Q-B.jpg" alt="Q-B" class="back">
+    </div>
+
+    <!-- QQ-A / QQ-B -->
+    <div class="flip-card" data-front="assets/QQ-A.jpg" data-back="assets/QQ-B.jpg">
+      <img src="assets/QQ-A.jpg" alt="QQ-A" class="front">
+      <img src="assets/QQ-B.jpg" alt="QQ-B" class="back">
+    </div>
+
+    <!-- R-A / R-B -->
+    <div class="flip-card" data-front="assets/R-A.jpg" data-back="assets/R-B.jpg">
+      <img src="assets/R-A.jpg" alt="R-A" class="front">
+      <img src="assets/R-B.jpg" alt="R-B" class="back">
+    </div>
+
+    <!-- RR-A / RR-B + single RR-C, RR-D, RR-E, RR-F -->
+    <div class="flip-card" data-front="assets/RR-A.jpg" data-back="assets/RR-B.jpg">
+      <img src="assets/RR-A.jpg" alt="RR-A" class="front">
+      <img src="assets/RR-B.jpg" alt="RR-B" class="back">
+    </div>
+    <div class="flip-card no-back" data-front="assets/RR-C.jpg">
+      <img src="assets/RR-C.jpg" alt="RR-C" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/RR-D.jpg">
+      <img src="assets/RR-D.jpg" alt="RR-D" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/RR-E.jpg">
+      <img src="assets/RR-E.jpg" alt="RR-E" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/RR-F.jpg">
+      <img src="assets/RR-F.jpg" alt="RR-F" class="front">
+    </div>
+
+    <!-- S-A / S-B -->
+    <div class="flip-card" data-front="assets/S-A.jpg" data-back="assets/S-B.jpg">
+      <img src="assets/S-A.jpg" alt="S-A" class="front">
+      <img src="assets/S-B.jpg" alt="S-B" class="back">
+    </div>
+
+    <!-- SS-A / SS-B -->
+    <div class="flip-card" data-front="assets/SS-A.jpg" data-back="assets/SS-B.jpg">
+      <img src="assets/SS-A.jpg" alt="SS-A" class="front">
+      <img src="assets/SS-B.jpg" alt="SS-B" class="back">
+    </div>
+
+    <!-- T-A / T-B -->
+    <div class="flip-card" data-front="assets/T-A.jpg" data-back="assets/T-B.jpg">
+      <img src="assets/T-A.jpg" alt="T-A" class="front">
+      <img src="assets/T-B.jpg" alt="T-B" class="back">
+    </div>
+
+    <!-- TT-A / TT-B + single TT-C -->
+    <div class="flip-card" data-front="assets/TT-A.jpg" data-back="assets/TT-B.jpg">
+      <img src="assets/TT-A.jpg" alt="TT-A" class="front">
+      <img src="assets/TT-B.jpg" alt="TT-B" class="back">
+    </div>
+    <div class="flip-card no-back" data-front="assets/TT-C.jpg">
+      <img src="assets/TT-C.jpg" alt="TT-C" class="front">
+    </div>
+
+    <!-- U-A / U-B -->
+    <div class="flip-card" data-front="assets/U-A.jpg" data-back="assets/U-B.jpg">
+      <img src="assets/U-A.jpg" alt="U-A" class="front">
+      <img src="assets/U-B.jpg" alt="U-B" class="back">
+    </div>
+
+    <!-- UU-A / UU-B -->
+    <div class="flip-card" data-front="assets/UU-A.jpg" data-back="assets/UU-B.jpg">
+      <img src="assets/UU-A.jpg" alt="UU-A" class="front">
+      <img src="assets/UU-B.jpg" alt="UU-B" class="back">
+    </div>
+
+    <!-- V-A / V-B -->
+    <div class="flip-card" data-front="assets/V-A.jpg" data-back="assets/V-B.jpg">
+      <img src="assets/V-A.jpg" alt="V-A" class="front">
+      <img src="assets/V-B.jpg" alt="V-B" class="back">
+    </div>
+
+    <!-- VV-A / VV-B -->
+    <div class="flip-card" data-front="assets/VV-A.jpg" data-back="assets/VV-B.jpg">
+      <img src="assets/VV-A.jpg" alt="VV-A" class="front">
+      <img src="assets/VV-B.jpg" alt="VV-B" class="back">
+    </div>
+
+    <!-- W-A / W-B -->
+    <div class="flip-card" data-front="assets/W-A.jpg" data-back="assets/W-B.jpg">
+      <img src="assets/W-A.jpg" alt="W-A" class="front">
+      <img src="assets/W-B.jpg" alt="W-B" class="back">
+    </div>
+
+    <!-- WW-A / WW-B -->
+    <div class="flip-card" data-front="assets/WW-A.jpg" data-back="assets/WW-B.jpg">
+      <img src="assets/WW-A.jpg" alt="WW-A" class="front">
+      <img src="assets/WW-B.jpg" alt="WW-B" class="back">
+    </div>
+
+    <!-- X-A / X-B -->
+    <div class="flip-card" data-front="assets/X-A.jpg" data-back="assets/X-B.jpg">
+      <img src="assets/X-A.jpg" alt="X-A" class="front">
+      <img src="assets/X-B.jpg" alt="X-B" class="back">
+    </div>
+
+    <!-- Y-A / Y-B -->
+    <div class="flip-card" data-front="assets/Y-A.jpg" data-back="assets/Y-B.jpg">
+      <img src="assets/Y-A.jpg" alt="Y-A" class="front">
+      <img src="assets/Y-B.jpg" alt="Y-B" class="back">
+    </div>
+
+    <!-- Z-A / Z-B -->
+    <div class="flip-card" data-front="assets/Z-A.jpg" data-back="assets/Z-B.jpg">
+      <img src="assets/Z-A.jpg" alt="Z-A" class="front">
+      <img src="assets/Z-B.jpg" alt="Z-B" class="back">
+    </div>
+
+    <!-- Now all IMGI_... singles -->
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0001.jpg">
+      <img src="assets/IMGI_20240615_0001.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0002.jpg">
+      <img src="assets/IMGI_20240615_0002.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0004.jpg">
+      <img src="assets/IMGI_20240615_0004.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0005.jpg">
+      <img src="assets/IMGI_20240615_0005.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0006.jpg">
+      <img src="assets/IMGI_20240615_0006.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0007.jpg">
+      <img src="assets/IMGI_20240615_0007.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0008.jpg">
+      <img src="assets/IMGI_20240615_0008.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0009.jpg">
+      <img src="assets/IMGI_20240615_0009.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0010.jpg">
+      <img src="assets/IMGI_20240615_0010.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0011.jpg">
+      <img src="assets/IMGI_20240615_0011.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0012.jpg">
+      <img src="assets/IMGI_20240615_0012.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0013.jpg">
+      <img src="assets/IMGI_20240615_0013.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0015.jpg">
+      <img src="assets/IMGI_20240615_0015.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0016.jpg">
+      <img src="assets/IMGI_20240615_0016.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0017.jpg">
+      <img src="assets/IMGI_20240615_0017.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0019.jpg">
+      <img src="assets/IMGI_20240615_0019.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0020.jpg">
+      <img src="assets/IMGI_20240615_0020.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0021.jpg">
+      <img src="assets/IMGI_20240615_0021.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0026.jpg">
+      <img src="assets/IMGI_20240615_0026.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0027.jpg">
+      <img src="assets/IMGI_20240615_0027.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0028.jpg">
+      <img src="assets/IMGI_20240615_0028.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0029.jpg">
+      <img src="assets/IMGI_20240615_0029.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0030.jpg">
+      <img src="assets/IMGI_20240615_0030.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMGI_20240615_0031.jpg">
+      <img src="assets/IMGI_20240615_0031.jpg" alt="" class="front">
+    </div>
+
+    <!-- All IMG_... singles -->
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0001.jpg">
+      <img src="assets/IMG_20240615_0001.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0002.jpg">
+      <img src="assets/IMG_20240615_0002.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_00021.jpg">
+      <img src="assets/IMG_20240615_00021.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0003.jpg">
+      <img src="assets/IMG_20240615_0003.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_00031.jpg">
+      <img src="assets/IMG_20240615_00031.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0004.jpg">
+      <img src="assets/IMG_20240615_0004.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_00041.jpg">
+      <img src="assets/IMG_20240615_00041.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0005.jpg">
+      <img src="assets/IMG_20240615_0005.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0006.jpg">
+      <img src="assets/IMG_20240615_0006.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0007.jpg">
+      <img src="assets/IMG_20240615_0007.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0008 copy.jpg">
+      <img src="assets/IMG_20240615_0008 copy.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0008.jpg">
+      <img src="assets/IMG_20240615_0008.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_00081.jpg">
+      <img src="assets/IMG_20240615_00081.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0009.jpg">
+      <img src="assets/IMG_20240615_0009.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0010.jpg">
+      <img src="assets/IMG_20240615_0010.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0011.jpg">
+      <img src="assets/IMG_20240615_0011.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0012.jpg">
+      <img src="assets/IMG_20240615_0012.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_00121.jpg">
+      <img src="assets/IMG_20240615_00121.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0013.jpg">
+      <img src="assets/IMG_20240615_0013.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0014.jpg">
+      <img src="assets/IMG_20240615_0014.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0015.jpg">
+      <img src="assets/IMG_20240615_0015.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0016.jpg">
+      <img src="assets/IMG_20240615_0016.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_00161.jpg">
+      <img src="assets/IMG_20240615_00161.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0017.jpg">
+      <img src="assets/IMG_20240615_0017.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0018.jpg">
+      <img src="assets/IMG_20240615_0018.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0019.jpg">
+      <img src="assets/IMG_20240615_0019.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0020.jpg">
+      <img src="assets/IMG_20240615_0020.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0021.jpg">
+      <img src="assets/IMG_20240615_0021.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0022.jpg">
+      <img src="assets/IMG_20240615_0022.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0023.jpg">
+      <img src="assets/IMG_20240615_0023.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0024.jpg">
+      <img src="assets/IMG_20240615_0024.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0025.jpg">
+      <img src="assets/IMG_20240615_0025.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0026.jpg">
+      <img src="assets/IMG_20240615_0026.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0027.jpg">
+      <img src="assets/IMG_20240615_0027.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0028.jpg">
+      <img src="assets/IMG_20240615_0028.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0029.jpg">
+      <img src="assets/IMG_20240615_0029.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0030.jpg">
+      <img src="assets/IMG_20240615_0030.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0031.jpg">
+      <img src="assets/IMG_20240615_0031.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0032.jpg">
+      <img src="assets/IMG_20240615_0032.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0033.jpg">
+      <img src="assets/IMG_20240615_0033.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0034.jpg">
+      <img src="assets/IMG_20240615_0034.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0035.jpg">
+      <img src="assets/IMG_20240615_0035.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0036.jpg">
+      <img src="assets/IMG_20240615_0036.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0037.jpg">
+      <img src="assets/IMG_20240615_0037.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_20240615_0038.jpg">
+      <img src="assets/IMG_20240615_0038.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_3114.jpg">
+      <img src="assets/IMG_3114.jpg" alt="" class="front">
+    </div>
+    <div class="flip-card no-back" data-front="assets/IMG_5678.jpg">
+      <img src="assets/IMG_5678.jpg" alt="" class="front">
+    </div>
+
+  </div> <!-- End .gallery-container -->
+
+  <!-- Modal structure -->
+  <div class="modal" id="imageModal">
+    <div class="modal-content" id="modalContent">
+      <button class="close-btn" id="closeBtn">X</button>
+      <img src="" alt="enlarged image" id="modalImage"/>
+      <button class="toggle-btn" id="toggleBtn" style="display:none;">View Back</button>
+    </div>
+  </div>
+
+  <script>
+    // Grab modal elements
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const closeBtn = document.getElementById('closeBtn');
+
+    let currentFront = '';
+    let currentBack = '';
+    let showingFront = true;
+
+    // Open modal on card click
+    document.querySelectorAll('.flip-card').forEach(card => {
+      card.addEventListener('click', () => {
+        currentFront = card.dataset.front;
+        currentBack = card.dataset.back || ''; // might be empty
+        showingFront = true;
+        // Show front by default
+        modalImage.src = currentFront;
+        // Show/hide toggle button based on whether we have a back
+        if (currentBack) {
+          toggleBtn.style.display = 'inline-block';
+          toggleBtn.textContent = 'View Back';
+        } else {
+          toggleBtn.style.display = 'none';
+        }
+        // Show modal
+        modal.classList.add('active');
+      });
+    });
+
+    // Close modal
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+
+    // Click outside content to close
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Close on ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    // Toggle front/back
+    toggleBtn.addEventListener('click', () => {
+      if (!currentBack) return; // no back image
+      if (showingFront) {
+        modalImage.src = currentBack;
+        toggleBtn.textContent = 'View Front';
+      } else {
+        modalImage.src = currentFront;
+        toggleBtn.textContent = 'View Back';
+      }
+      showingFront = !showingFront;
+    });
+  </script>
+</body>
+</html>
